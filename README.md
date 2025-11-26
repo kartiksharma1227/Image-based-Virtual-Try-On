@@ -486,98 +486,10 @@ The project includes a comprehensive logging system configured in `logging_confi
 - **ERROR**: Error messages
 - **CRITICAL**: Critical errors
 
-## 🔧 Troubleshooting
 
-### Common Issues
-
-#### 1. CUDA Out of Memory
-
-**Solution**:
-
-```python
-# Reduce batch size
---batch_size 1
-
-# Or use smaller image resolution
---img_H 512 --img_W 384
-```
-
-#### 2. Flask Not Starting
-
-**Solution**:
-
-```powershell
-pip install -r requirements_flask.txt
-conda activate viton-pip
-```
-
-#### 3. Model Checkpoint Not Found
-
-**Solution**:
-
-- Verify checkpoint path in command
-- Ensure checkpoints are downloaded and extracted
-- Check `app_flask.py` or `inference.py` for correct paths
-
-#### 4. Import Errors
-
-**Solution**:
-
-```powershell
-# Reinstall dependencies
-pip install -r requirements.txt --force-reinstall
-```
-
-#### 5. Preprocessing Failed
-
-**Solution**:
-
-- Verify dataset structure matches expected format
-- Check image file formats (should be JPG/PNG)
-- Ensure all required directories exist
-
-#### 6. Web UI Not Loading Images
-
-**Solution**:
-
-- Check file format (JPG/JPEG only)
-- Verify file size < 16MB
-- Check browser console for errors
-- Verify write permissions on directories
-
-### Performance Optimization
-
-#### GPU Memory
-
-```python
-# In inference.py or app_flask.py
-torch.cuda.empty_cache()  # Clear GPU cache
-```
-
-#### Batch Processing
-
-```python
-# Process multiple images efficiently
---batch_size 4  # Adjust based on GPU memory
-```
-
-#### CPU Workers
-
-Edit `train.py`:
-
-```python
-num_workers=4  # Adjust based on CPU cores
 ```
 
 ## 📚 Additional Resources
-
-### Documentation
-
-- `README.md` - Original project README
-- `WEB_APP_README.md` - Detailed web app documentation
-- `FLASK_SETUP_README.md` - Flask setup guide
-- `LOGGING_README.md` - Logging configuration details
-- `APP_README.md` - Application overview
 
 ### Command References
 
@@ -641,25 +553,6 @@ python preprocessing_toolkit/completepreprocessing.py --person <person_id> --clo
 python train.py --config_name VITONHD --data_root_dir ./DATA/zalando-hd-resized --batch_size 8
 ```
 
-## 🤝 Contributing
-
-For issues, improvements, or questions:
-
-1. Check logs in `./logs/` directory
-2. Verify environment activation
-3. Ensure CUDA is properly configured
-4. Check dataset and checkpoint paths
-
-## 📄 License
-
-[Add your license information here]
-
-## 🙏 Acknowledgments
-
-- StableVITON model architecture
-- VITON-HD dataset
-- HuggingFace Transformers and Diffusers
-- PyTorch Lightning framework
 
 ---
 
