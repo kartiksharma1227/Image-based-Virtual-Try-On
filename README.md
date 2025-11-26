@@ -45,7 +45,7 @@ A complete deep learning-based virtual try-on system that allows you to visualiz
 ### Step 1: Clone the Repository
 
 ```powershell
-git clone <your-repository-url>
+git clone https://github.com/Ishu0112/Image-based-Virtual-Try-On.git
 cd StableVITON-master
 ```
 
@@ -129,7 +129,7 @@ pip install -r requirements_flask.txt
 Download the VITON-HD dataset from Google Drive:
 
 ```
-[Dataset Link - Add your Google Drive link here]
+https://drive.google.com/file/d/1tLx8LRp-sxDp0EcYmYoV_vXdSc-jJ79w/view?usp=sharing
 ```
 
 ### Dataset Structure
