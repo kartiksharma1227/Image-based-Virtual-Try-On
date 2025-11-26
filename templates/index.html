@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try-On</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" fill="url(#gradient)"/>
+                    <path d="M15 15h10v10h-10z" fill="white" opacity="0.8"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#667eea"/>
+                            <stop offset="100%" stop-color="#764ba2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>Virtual Try-On</h1>
+            </div>
+            <!-- <p class="subtitle">AI-Powered Virtual Try-On</p> -->
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-grid">
+                    <!-- Person Image Upload -->
+                    <div class="upload-box">
+                        <div class="upload-icon"></div>
+                        <h3>Person Image</h3>
+                        <div class="upload-area" id="personUploadArea">
+                            <input type="file" id="personInput" accept=".jpg,.jpeg" hidden>
+                            <div class="upload-placeholder">
+                                <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p>Click to upload or drag & drop</p>
+                                <span>JPG or JPEG only</span>
+                            </div>
+                            <img id="personPreview" class="preview-image clickable" style="display: none;" onclick="openImageModal(this.src); event.stopPropagation();">
+                        </div>
+                    </div>
+
+                    <!-- Cloth Image Upload -->
+                    <div class="upload-box">
+                        <div class="upload-icon"></div>
+                        <h3>Clothing Image</h3>
+                        <div class="upload-area" id="clothUploadArea">
+                            <input type="file" id="clothInput" accept=".jpg,.jpeg" hidden>
+                            <div class="upload-placeholder">
+                                <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p>Click to upload or drag & drop</p>
+                                <span>JPG or JPEG only</span>
+                            </div>
+                            <img id="clothPreview" class="preview-image clickable" style="display: none;" onclick="openImageModal(this.src); event.stopPropagation();">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Button -->
+                <button class="btn-primary" id="startBtn" disabled>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                    </svg>
+                    Start Virtual Try-On
+                </button>
+            </div>
+
+            <!-- Processing Section -->
+            <div class="processing-section" id="processingSection" style="display: none;">
+                <div class="processing-card">
+                    <h3>Processing Your Virtual Try-On</h3>
+                    
+                    <!-- Visual Process Flow -->
+                    <div class="process-flow">
+                        <div class="process-item">
+                            <img id="procPersonImg" class="process-preview clickable" onclick="openImageModal(this.src)">
+                            <p>Person (Click to enlarge)</p>
+                        </div>
+                        <div class="process-plus">+</div>
+                        <div class="process-item">
+                            <img id="procClothImg" class="process-preview clickable" onclick="openImageModal(this.src)">
+                            <p>Clothing (Click to enlarge)</p>
+                        </div>
+                        <div class="process-equals">=</div>
+                        <div class="process-item">
+                            <div class="process-preview loading-skeleton" id="resultPlaceholder">
+                                <div class="spinner"></div>
+                            </div>
+                            <img id="procResultImg" class="process-preview clickable" style="display: none;" onclick="openImageModal(this.src)">
+                            <p>Result (Click to enlarge)</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-info">
+                            <span id="progressText">Starting...</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Message -->
+                    <div class="status-message" id="statusMessage">
+                        <div class="status-icon"></div>
+                        <p id="statusText">Initializing virtual try-on process...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-card">
+                    <div class="success-icon"></div>
+                    <h2>Virtual Try-On Complete!</h2>
+                    
+                    <!-- Result Comparison -->
+                    <div class="result-comparison">
+                        <div class="result-item">
+                            <img id="finalPersonImg" class="result-image clickable" onclick="openImageModal(this.src)">
+                            <p>Original (Click to enlarge)</p>
+                        </div>
+                        <div class="result-plus">+</div>
+                        <div class="result-item">
+                            <img id="finalClothImg" class="result-image clickable" onclick="openImageModal(this.src)">
+                            <p>Clothing (Click to enlarge)</p>
+                        </div>
+                        <div class="result-equals">=</div>
+                        <div class="result-item result-main">
+                            <img id="finalResultImg" class="result-image clickable" onclick="openImageModal(this.src)">
+                            <p>Result (Click to enlarge)</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="result-actions">
+                        <button class="btn-secondary" id="downloadBtn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                            Download Result
+                        </button>
+                        <button class="btn-primary" id="tryAgainBtn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+                            </svg>
+                            Try Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <!-- <footer class="footer">
+            <p>Powered by Virtual Try-On AI Technology</p>
+        </footer> -->
+        
+        <!-- Image Modal -->
+        <div id="imageModal" class="modal" onclick="closeImageModal()">
+            <span class="modal-close">&times;</span>
+            <img class="modal-content" id="modalImage">
+            <div class="modal-caption">Click anywhere to close</div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
