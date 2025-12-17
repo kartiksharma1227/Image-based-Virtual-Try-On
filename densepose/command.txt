@@ -1,0 +1,2 @@
+python image_convert.py --input "img2.jpeg" --out "op1.jpeg"
+python image_convert.py --input "img.jpg" --out "op_path.jpg" --width 768 --height 1024

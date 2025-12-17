@@ -1,5 +1,5 @@
 # Hidden/dot files (with exceptions for important files)
-.*
+._*
 !.gitignore
 !.github/
 !.gitattributes
